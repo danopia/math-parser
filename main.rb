@@ -58,7 +58,7 @@ pass = 0
 
 parser = MathParser.new
 maths.each_pair do |(expr, tokens)|
-    res = parser.parse(expr) rescue nil
+    res = parser.parse(expr) #rescue nil
     
     if res == tokens
         pass += 1

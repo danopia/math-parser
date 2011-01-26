@@ -1,6 +1,15 @@
 #require 'ast/term'
 
-class ParseError < StandardError; end
+class ParseError < StandardError
+    attr_accessor :reader
+    
+    def initialize message, reader
+        super message
+        @reader = reader
+    end
+    
+    def to_s; super; end
+end
 
 class MathParser
     def parse string
