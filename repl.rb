@@ -7,11 +7,15 @@ while true
     STDOUT.flush
     
     begin
-        res = parser.parse(gets.chomp)
+      res = parser.parse(gets.chomp)
     rescue ParseError => e
-        puts e.message
+      puts e.message
     end
     
-    puts "=> #{res.to_i}"
+    begin
+      puts "=> #{res.to_i}"
+    rescue => e
+      puts e, e.backtrace
+    end
 end
 

@@ -25,6 +25,9 @@ module AST
           Constant.new raw.to_i
         end
       
+      elsif raw.is_a? Fixnum
+        Constant.new raw
+      
       else
         raise 'wtf is this?'
       end

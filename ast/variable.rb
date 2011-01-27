@@ -10,7 +10,7 @@ module AST
     
     def * other
       if other.is_a?(Variable) && @letter == other.letter
-        AST::Operation.new(self, :^, '2')
+        AST::Operation.new(self, :^, 2)
       else
         super
       end
