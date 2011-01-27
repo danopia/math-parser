@@ -42,6 +42,12 @@ module AST
     def hash; @left.hash*2 + @symbol.hash + @right.hash*3; end
     
     def to_s
+      if @symbol == :'^'
+        return left.to_s if @right.to_i == 1
+        return "#{@left}²" if @right.to_i == 2
+        return "#{@left}³" if @right.to_i == 3
+      end
+      
       "#{@left} #{@symbol} #{@right}"
     end
     
