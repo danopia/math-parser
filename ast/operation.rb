@@ -11,19 +11,9 @@ module AST
       @right = NodeFactory.build right
     end
     
-    def + other
-      raise StandardError, "Addition of #{self.class.to_s} and #{other.class.to_s} is not implemented"
-    end
-    
-    def * other
-      raise StandardError, "Multiplication of #{self.class.to_s} and #{other.class.to_s} is not implemented"
-    end
-    
-    def ** power
-      raise StandardError, "Bases of #{self.class.to_s} aren't able to be raised to powers of #{power.class.to_s} yet"
-    end
-    
     def to_i
+      return nil unless constant?
+      
       case @symbol
         when :'+': @left +  @right
         when :'-': @left -  @right
@@ -48,7 +38,7 @@ module AST
     def hash; @left.hash*2 + @symbol.hash + @right.hash*3; end
     
     def to_s
-      @children.join " #{@symbol} "
+      "#{@left} #{@symbol} #{@right}"
     end
     
     def inspect

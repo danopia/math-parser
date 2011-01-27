@@ -52,6 +52,14 @@ token_tests = {
   '2*-1' => ['2', :*, '-1'],
   '2*--1' => nil,
   '2+(-1)' => ['2', :+, ['-1']],
+  
+  # Variables
+  'x' => 'x',
+  '2x' => ['2', :*, 'x'],
+  'x^2' => ['x', :^, '2'],
+  'xy' => ['x', :*, 'y'],
+  'x^(2)y' => [['x', :^, ['2']], :*, 'y'],
+  '3xy' => [['3', :*, 'x'], :*, 'y'],
 }
 
 pass = 0
@@ -86,6 +94,9 @@ eval_tests = {
   # OoO
   '1+2*3' => 7,
   '3^2^2' => 81,
+  
+  # Variables
+  '3x+2' => nil,
 }
 
 pass = 0
@@ -95,7 +106,7 @@ eval_tests.each_pair do |(expr, value)|
     if res.to_i == value
         pass += 1
     else
-        puts "[Eval  FAIL] #{expr} => #{res.to_i}): expected #{value.inspect}"
+        puts "[Eval  FAIL] #{expr} => #{res.to_i.inspect}: expected #{value.inspect}"
     end
 end
 

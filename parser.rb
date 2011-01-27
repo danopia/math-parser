@@ -48,10 +48,13 @@ class MathParser
                 token = nil
             elsif !token
                 token = c
+            elsif ('a'..'z').include?(c)
+                tokens << token << :*
+                token = c
             elsif token.is_a? Array
                 tokens << token << :*
                 token = c
-            else
+            elsif ('0'..'9').include?(c) || c == '.'
                 token += c
             #elsif ('0'..'9').include? c
             #  token += c

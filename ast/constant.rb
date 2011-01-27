@@ -12,7 +12,7 @@ module AST
       if other.constant?
         AST::Constant.new(@value + other.to_i)
       else
-        raise StandardError, "Addition of #{self.class.to_s} and #{other.class.to_s} is not implemented"
+        super
       end
     end
     
@@ -20,7 +20,7 @@ module AST
       if other.constant?
         AST::Constant.new(@value * other.to_i)
       else
-        raise StandardError, "Multiplication of #{self.class.to_s} and #{other.class.to_s} is not implemented"
+        super
       end
     end
     
@@ -28,11 +28,11 @@ module AST
       if power.constant?
         AST::Constant.new(@value ** power.to_i)
       else
-        raise StandardError, "Bases of #{self.class.to_s} aren't able to be raised to powers of #{power.class.to_s} yet"
+        super
       end
     end
     
-    def hash; value.hash; end
+    def hash; @value.hash; end
     
     def monomial?; true; end
     def constant?; true; end

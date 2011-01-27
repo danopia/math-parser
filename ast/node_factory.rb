@@ -2,6 +2,7 @@ require 'ast/node'
 require 'ast/operation'
 require 'ast/quantity'
 require 'ast/constant'
+require 'ast/variable'
 
 module AST
   class NodeFactory
@@ -10,7 +11,7 @@ module AST
       
       if raw.is_a? Array
         if raw.size == 3
-          Quantity.new(Operation.new(*raw))
+          Operation.new(*raw)
         elsif raw.size == 1
           Quantity.new(build(raw[0]))
         else
@@ -18,7 +19,11 @@ module AST
         end
       
       elsif raw.is_a? String
-        Constant.new raw.to_i
+        if ('a'..'z').include?(raw)
+          Variable.new raw
+        else
+          Constant.new raw.to_i
+        end
       
       else
         raise 'wtf is this?'
