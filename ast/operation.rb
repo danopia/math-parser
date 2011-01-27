@@ -13,6 +13,7 @@ module AST
     
     def to_i
       return nil unless constant?
+      return 1 if @symbol == :'^' && @right.to_i == 0 # special case
       
       case @symbol
         when :'+': @left +  @right
@@ -33,7 +34,10 @@ module AST
       end
     end
     
-    def constant?; @left.constant? && @right.constant?; end
+    def constant?
+      return true if @symbol == :'^' && @right.constant? && @right.to_i == 0 # special case
+      @left.constant? && @right.constant?
+    end
     
     def hash; @left.hash*2 + @symbol.hash + @right.hash*3; end
     
