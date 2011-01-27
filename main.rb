@@ -44,6 +44,7 @@ token_tests = {
   '10^(2*5)3' => [['10', :^, ['2', :*, '5']], :*, '3'],
   '(4+5)^(2*5)3' => [[['4', :+, '5'], :^, ['2', :*, '5']], :*, '3'],
   '(2^2)^2' => [['2', :^, '2'], :^, '2'],
+  '2^2^2' => ['2', :^, ['2', :^, '2']],
   
   # Signs
   '-3' => '-3',
@@ -59,7 +60,7 @@ token_tests.each_pair do |(expr, tokens)|
     begin
         res = parser.parse_raw(expr)
     rescue ParseError => e
-        #puts e.message
+        puts e.message if tokens
     end
     
     if res == tokens
@@ -79,7 +80,11 @@ eval_tests = {
   '123' => 123,
   '01' => 1,
   
+  # Basics
+  '1+1' => 2,
+  
   # OoO
+  '1+2*3' => 7,
   '3^2^2' => 81,
 }
 

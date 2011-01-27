@@ -9,7 +9,7 @@ class ParseError < RuntimeError
     end
     
     def message
-        "Syntax error at column #{@reader.index-1}: #{@message}\n" +
+        "Syntax error at column #{@reader.index}: #{@message}\n" +
         "#{@reader.string}\n#{(' '*(@reader.index-1))}^"
     end
 end
