@@ -1,4 +1,4 @@
-require 'parser'
+require './parser'
 
 parser = MathParser.new
 

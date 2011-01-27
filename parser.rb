@@ -1,4 +1,5 @@
-require 'ast/node_factory'
+# coding: utf-8
+require './ast/node_factory'
 
 class ParseError < RuntimeError
     attr_accessor :reader, :message
@@ -19,6 +20,7 @@ class MathParser
         reader = CharReader.new string
         tokens = tokenize reader
         clarify tokens
+        #tokens = tokens.first if tokens.size == 1
     end
     
     def parse string
@@ -30,13 +32,15 @@ class MathParser
         token = nil
         
         ops = ['+', '*', '-', '/', '^']
+        unipowers = {'¹' => 1, '²' => 2, '³' => 3}
+        
         reader.read_to_end do |c|
             if c == '('
                 tokens << token << :* if token
                 token = tokenize(reader, false)
             elsif c == ')'
                 reader.raise 'Encountered ) without matching (' if root
-                tokens << token if token.any?
+                tokens << token if !token.empty?
                 return tokens
             elsif (c == '-' || c == '+') && !token
                 token = c
@@ -46,6 +50,10 @@ class MathParser
                 reader.raise 'Double operators are not legal syntax' if !token
                 tokens << token << c.to_sym
                 token = nil
+            elsif unipowers.has_key? c
+                reader.raise 'Double operators are not legal syntax' if !token
+                tokens << token << :'^'
+                token = [unipowers[c]]
             elsif !token
                 token = c
             elsif ('a'..'z').include?(c)
@@ -66,7 +74,7 @@ class MathParser
         
         reader.raise 'Extra opening parenthesis in input' if reader.eof? && !root
         
-        tokens << token if token.any?
+        tokens << token if !token.empty?
         tokens
     end
     

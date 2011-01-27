@@ -1,5 +1,6 @@
-require 'ast/node'
-require 'ast/node_factory'
+# coding: utf-8
+require './ast/node'
+require './ast/node_factory'
 
 module AST
   class Operation < Node
@@ -16,21 +17,21 @@ module AST
       return 1 if @symbol == :'^' && @right.to_i == 0 # special case
       
       case @symbol
-        when :'+': @left +  @right
-        when :'-': @left -  @right
-        when :'*': @left *  @right
-        when :'/': @left /  @right
-        when :'^': @left ** @right
+        when :'+'; @left +  @right
+        when :'-'; @left -  @right
+        when :'*'; @left *  @right
+        when :'/'; @left /  @right
+        when :'^'; @left ** @right
       end.to_i
     end
     
     def op_name
       case @symbol
-        when :'+': 'Addition'
-        when :'-': 'Subtraction'
-        when :'*': 'Multiplication'
-        when :'/': 'Division'
-        when :'^': 'Power'
+        when :'+'; 'Addition'
+        when :'-'; 'Subtraction'
+        when :'*'; 'Multiplication'
+        when :'/'; 'Division'
+        when :'^'; 'Power'
       end
     end
     

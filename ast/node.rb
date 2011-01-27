@@ -1,4 +1,4 @@
-require 'ast/node_factory'
+require './ast/node_factory'
 
 module AST
   class Node

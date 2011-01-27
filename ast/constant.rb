@@ -1,4 +1,4 @@
-require 'ast/node'
+require './ast/node'
 
 module AST
   class Constant < Node

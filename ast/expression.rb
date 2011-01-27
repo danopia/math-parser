@@ -1,5 +1,5 @@
-require 'ast/node'
-require 'ast/node_factory'
+require './ast/node'
+require './ast/node_factory'
 
 module AST
   class Expression < Node
