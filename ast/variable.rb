@@ -22,7 +22,7 @@ module AST
     def constant?; false; end
     
     def to_s; @letter.to_s; end
-    #def to_i; @letter.to_i; end
+    def to_i; nil; end
     
     def inspect
       "#<AST::Variable #{@letter}>"

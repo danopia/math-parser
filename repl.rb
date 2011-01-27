@@ -13,7 +13,7 @@ while true
     end
     
     begin
-      puts "=> #{res.to_i}"
+      puts "=> #{res.to_i || res}"
     rescue => e
       puts e, e.backtrace
     end
