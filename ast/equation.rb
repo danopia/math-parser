@@ -24,7 +24,8 @@ module AST
     def hash; @left.hash*2 + @right.hash*3; end
     
     def to_s
-      "#{@left} = #{@right}"
+      right = @right.to_num.to_s if @right.is_a? Ratio
+      "#{@left} = #{right || @right}"
     end
     
     def inspect
@@ -38,13 +39,14 @@ module AST
     def solve
       return @left.to_i == @right.to_i if constant?
       
-      constant, variable = @left, @right
+      variable, constant = @left, @right
       constant, variable = variable, constant if variable.constant?
-      raise 'as if...' if variable.constant?
+      #raise 'as if...' if !constant.constant?
       
       until variable.is_a? Variable
         #p variable
         #sleep 1
+        #puts Equation.new(variable, constant)
         
         if variable.is_a? Constant
           raise 'this should never happen'
@@ -59,6 +61,31 @@ module AST
               constant = constant / variable.right
               variable = variable.left
             end
+          elsif variable.symbol == :'+'
+            if variable.left.constant?
+              constant = constant - variable.left
+              variable = variable.right
+            elsif variable.right.constant?
+              constant = constant - variable.right
+              variable = variable.left
+            end
+          elsif variable.symbol == :'-'
+            if variable.left.constant?
+              constant = variable.left - constant
+              variable = variable.right
+            elsif variable.right.constant?
+              constant = constant + variable.right
+              variable = variable.left
+            end
+          end
+        elsif variable.is_a? Ratio
+          if variable.top.constant?
+            variable, constant = constant, variable
+            variable *= constant.bottom
+            constant = constant.top
+          elsif variable.bottom.constant?
+            constant *= variable.bottom
+            variable = variable.top
           end
         else
           raise "The solver doesn't understand how to handle a #{variable.class} yet"

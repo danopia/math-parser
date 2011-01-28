@@ -8,7 +8,7 @@ module AST
       elsif self.constant? && other.constant?
         AST::Operation.new self.to_i, :+, other.to_i
       else
-        raise "Addition between #{self.class} and #{other.class} isn't defined"
+        AST::Operation.new self, :+, other
       end
     end
     
@@ -22,7 +22,7 @@ module AST
       elsif self.constant? && other.constant?
         AST::Operation.new self.to_i, :*, other.to_i
       else
-        raise "Multiplication between #{self.class} and #{other.class} isn't defined"
+        AST::Operation.new self, :*, other
       end
     end
     
@@ -32,7 +32,7 @@ module AST
       elsif self.constant? && other.constant?
         AST::Ratio.new self.to_i, other.to_i
       else
-        raise "Division between #{self.class} and #{other.class} isn't defined"
+        AST::Ratio.new self, other
       end
     end
     

@@ -9,7 +9,7 @@ module AST
     end
     
     def + other
-      if other.constant?
+      if other.is_a? Constant
         AST::Constant.new(@value + other.to_i)
       else
         super
@@ -17,7 +17,7 @@ module AST
     end
     
     def * other
-      if other.constant?
+      if other.is_a? Constant
         AST::Constant.new(@value * other.to_i)
       else
         super
@@ -25,15 +25,15 @@ module AST
     end
     
     def / other
-      if other.constant?
-        AST::Constant.new(@value / other.to_i)
+      if other.is_a? Constant
+        AST::Ratio.new(@value, other.to_i)
       else
         super
       end
     end
     
     def ** power
-      if power.constant?
+      if power.is_a? Constant
         AST::Constant.new(@value ** power.to_i)
       else
         super

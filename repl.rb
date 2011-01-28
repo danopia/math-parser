@@ -32,6 +32,8 @@ while true
     if res.is_a? AST::Equation
       answer = res.solve
       stack << answer.to_s << answer.simplify.to_s
+    elsif simple.is_a? AST::Ratio
+      stack << simple.to_num.to_s
     elsif res.constant?
       stack << res.to_i.to_s
     end
