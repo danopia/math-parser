@@ -37,6 +37,40 @@ module AST
       end
     end
     
+    def + other
+      if @symbol == :'/'
+        Operation.new(@left + (other.to_i * @right), @symbol, @right)
+      else
+        super
+      end
+    end
+    
+    def - other
+      if @symbol == :'/'
+        Operation.new(@left - (other.to_i * @right), @symbol, @right)
+      else
+        super
+      end
+    end
+    
+    def * other
+      if @symbol == :'/' && other.is_a?(Operation) && other.symbol == :'/'
+        Operation.new(@left * other.left, @symbol, @right * other.right)
+      else
+        super
+      end
+    end
+    
+    def / other
+      if @symbol == :'/' && other.is_a?(Operation) && other.symbol == :'/'
+        Operation.new(@left * other.right, @symbol, @right * other.left)
+      elsif @symbol == :'/'
+        Operation.new(@left, @symbol, @right * other.to_i)
+      else
+        super
+      end
+    end
+    
     def constant?
       return true if @symbol == :'^' && @right.constant? && @right.to_i == 0 # special case
       @left.constant? && @right.constant?
