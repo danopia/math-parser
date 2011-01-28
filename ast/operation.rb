@@ -22,6 +22,7 @@ module AST
         when :'*'; @left *  @right
         when :'/'; @left /  @right
         when :'^'; @left ** @right
+        else; raise 'Unknown operation'
       end.to_i
     end
     
@@ -32,6 +33,7 @@ module AST
         when :'*'; 'Multiplication'
         when :'/'; 'Division'
         when :'^'; 'Power'
+        else; raise 'Unknown operation'
       end
     end
     

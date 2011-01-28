@@ -16,14 +16,18 @@ while true
   line = gets
   exit unless line
   next if line.empty?
+  
+  res = nil
   begin
     res = parser.parse(line.chomp)
   rescue ParseError => e
     puts e.message
+    next
   end
   
   begin
-    puts "=> #{res.to_i || res}"
+    i = res.to_i
+    puts "=> #{(i === nil) ? res : i}"
   rescue => e
     puts e, e.backtrace
   end

@@ -7,7 +7,6 @@ class MathParser
         reader = CharReader.new string
         tokens = tokenize reader
         clarify tokens
-        #tokens = tokens.first if tokens.size == 1
     end
     
     def parse string
@@ -43,6 +42,13 @@ class MathParser
                   tokens << token << :'^'
                   token = [unipowers[c]]
                 end
+            elsif c == '='
+                reader.raise 'Missing number before equality' if !token && tokens.empty?
+                reader.raise 'Double operators are not legal syntax' if !token
+                reader.raise 'Equality signs can only go at the top-most level' if !root
+                reader.raise 'Each expression may only have one equality sign' if tokens.include?(:'=')
+                tokens << token << c.to_sym
+                token = nil
             elsif ('a'..'z').include?(c)
                 tokens << token << :* if token
                 token = c
@@ -72,7 +78,7 @@ class MathParser
         raise 'lolwtf' # it's even!?
       end
       
-      precedence = [[:'^'], [:'*', :'/'], [:'+', :'-']]
+      precedence = [[:'='], [:'^'], [:'*', :'/'], [:'+', :'-']]
       precedence.each do |ops|
         operators = tokens.select{|t| t.is_a? Symbol }
         next if ops.select{|op| operators.include? op}.empty?
