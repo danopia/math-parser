@@ -60,6 +60,9 @@ token_tests = {
   'xy' => ['x', :*, 'y'],
   'x^(2)y' => [['x', :^, ['2']], :*, 'y'],
   '3xy' => [['3', :*, 'x'], :*, 'y'],
+  
+  # Equations
+  # TODO!
 }
 
 pass = 0
@@ -112,4 +115,11 @@ eval_tests.each_pair do |(expr, value)|
 end
 
 puts "#{pass}/#{eval_tests.size} evaluation tests passed (#{((pass.to_f / eval_tests.size)*100).to_i}%)"
+
+begin
+    res = parser.parse('4x=2')
+    puts "#{res} => #{res.solve}"
+rescue ParseError => e
+    puts e.message if tokens
+end
 

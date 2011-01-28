@@ -14,7 +14,7 @@ module AST
     def to_i
       return nil unless constant?
       
-      @left.to_i == @right.to_i
+      (@left.to_i == @right.to_i) ? 1 : 0
     end
     
     def constant?
@@ -33,6 +33,36 @@ module AST
     
     def simplify
       Equation.new @left.simplify, @right.simplify
+    end
+    
+    def solve
+      return @left.to_i == @right.to_i if constant?
+      
+      constant, variable = @left, @right
+      constant, variable = variable, constant if variable.constant?
+      raise 'as if...' if variable.constant?
+      
+      until variable.is_a? Variable
+        #p variable
+        #sleep 1
+        
+        if variable.is_a? Constant
+          raise 'this should never happen'
+        elsif variable.is_a? Quantity
+          variable = variable.child
+        elsif variable.is_a? Operation
+          if variable.symbol == :'*'
+            if variable.left.constant?
+              constant = constant / variable.left
+              variable = variable.right
+            end
+          end
+        else
+          raise "The solver doesn't understand how to handle a #{variable.class} yet"
+        end
+      end
+      
+      Equation.new variable, constant
     end
   end
 end

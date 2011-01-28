@@ -24,6 +24,14 @@ module AST
       end
     end
     
+    def / other
+      if other.constant?
+        AST::Constant.new(@value / other.to_i)
+      else
+        super
+      end
+    end
+    
     def ** power
       if power.constant?
         AST::Constant.new(@value ** power.to_i)

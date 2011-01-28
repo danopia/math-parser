@@ -9,7 +9,7 @@ end
 
 while true
   if STDOUT.tty?
-    print '>> '
+    print ' > '
     STDOUT.flush
   end
   
@@ -28,13 +28,20 @@ while true
   begin
     simple = res.simplify
     stack = [res.to_s, simple.to_s]
-    stack << res.to_i.to_s if res.constant?
+    
+    if res.is_a? AST::Equation
+      stack << res.solve.to_s
+    elsif res.constant?
+      stack << res.to_i.to_s
+    end
     
     (stack.size - 2).downto(0) do |i|
       stack.slice! i if stack[i] == stack[i+1]
     end
     
-    puts "=> #{stack.join ' = '}"
+    stack.each do |line|
+      puts "=> #{line}"
+    end
   rescue => e
     puts e, e.backtrace
   end

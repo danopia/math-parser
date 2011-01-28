@@ -78,7 +78,7 @@ class MathParser
         raise 'lolwtf' # it's even!?
       end
       
-      precedence = [[:'='], [:'^'], [:'*', :'/'], [:'+', :'-']]
+      precedence = [[:'^'], [:'*', :'/'], [:'+', :'-'], [:'=']]
       precedence.each do |ops|
         operators = tokens.select{|t| t.is_a? Symbol }
         next if ops.select{|op| operators.include? op}.empty?
