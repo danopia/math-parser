@@ -1,5 +1,6 @@
 require './ast/node'
 require './ast/operation'
+require './ast/ratio'
 require './ast/equation'
 require './ast/quantity'
 require './ast/constant'
@@ -13,6 +14,7 @@ module AST
       if raw.is_a? Array
         if raw.size == 3
           return Equation.new(raw[0], raw[2]) if raw[1] == :'='
+          return Ratio.new(raw[0], raw[2]) if raw[1] == :'/'
           Quantity.new(Operation.new(*raw))
         elsif raw.size == 1
           Quantity.new(build(raw[0]))

@@ -3,7 +3,7 @@ require './ast/node_factory'
 module AST
   class Node
     def + other
-      if other.is_a?(Operation) && other.symbol == :'/'
+      if other.is_a? Ratio
         other.to_i + self.to_i
       elsif self.constant? && other.constant?
         AST::Operation.new self.to_i, :+, other.to_i
@@ -17,7 +17,7 @@ module AST
     end
     
     def * other
-      if other.is_a?(Operation) && other.symbol == :'/'
+      if other.is_a? Ratio
         other * self
       elsif self.constant? && other.constant?
         AST::Operation.new self.to_i, :*, other.to_i
@@ -27,10 +27,10 @@ module AST
     end
     
     def / other
-      if self.constant? && other.is_a?(Operation) && other.symbol == :'/'
-        AST::Operation.new(self.to_i * other.right, :/, other.left)
+      if self.constant? && other.is_a?(Ratio)
+        AST::Ratio.new(self.to_i * other.right, other.left)
       elsif self.constant? && other.constant?
-        AST::Operation.new self.to_i, :/, other.to_i
+        AST::Ratio.new self.to_i, other.to_i
       else
         raise "Division between #{self.class} and #{other.class} isn't defined"
       end
