@@ -117,7 +117,7 @@ end
 puts "#{pass}/#{eval_tests.size} evaluation tests passed (#{((pass.to_f / eval_tests.size)*100).to_i}%)"
 
 begin
-    res = parser.parse('4x=2')
+    res = parser.parse('4x=8')
     puts "#{res} => #{res.solve}"
 rescue ParseError => e
     puts e.message if tokens

@@ -11,11 +11,7 @@ module AST
     end
     
     def - other
-      if other.constant?
-        self + NodeFactory.build(-other.to_i)
-      else
-        raise "Subtraction between #{self.class} and #{other.class} isn't defined"
-      end
+      self + -other
     end
     
     def * other
@@ -27,10 +23,10 @@ module AST
     end
     
     def / other
-      if other.constant?
-        self * NodeFactory.build(1/other.to_i)
+      if self.constant? && other.constant?
+        AST::Operation.new self.to_i, :/, other.to_i
       else
-        raise "Divison between #{self.class} and #{other.class} isn't defined"
+        raise "Division between #{self.class} and #{other.class} isn't defined"
       end
     end
     
@@ -42,6 +38,17 @@ module AST
       end
     end
     
+    
+    def reciprocal
+      return NodeFactory.build(1/to_i) if constant? # TODO: precision!
+      raise "#{self.class} doesn't know how to find its own reciprocal"
+    end
+    
+    def -@
+      return NodeFactory.build(-to_i) if constant?
+      raise "#{self.class} doesn't know how to flip its sign"
+    end
+
     
     def simplify
       constant? ? NodeFactory.build(to_i) : self

@@ -55,6 +55,9 @@ module AST
             if variable.left.constant?
               constant = constant / variable.left
               variable = variable.right
+            elsif variable.right.constant?
+              constant = constant / variable.right
+              variable = variable.left
             end
           end
         else

@@ -30,7 +30,8 @@ while true
     stack = [res.to_s, simple.to_s]
     
     if res.is_a? AST::Equation
-      stack << res.solve.to_s
+      answer = res.solve
+      stack << answer.to_s << answer.simplify.to_s
     elsif res.constant?
       stack << res.to_i.to_s
     end
