@@ -30,7 +30,7 @@ module AST
     end
     
     def to_i
-#      throw StandardError, 'Non-constant terms can not be converted to a constant number' unless constant?
+      return nil unless constant?
       @base.to_i ** @power.to_i
     end
   end

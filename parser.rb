@@ -65,7 +65,7 @@ class MathParser
         
         reader.raise 'Extra opening parenthesis in input' if reader.eof? && !root
         
-        tokens << token if !token.empty?
+        tokens << token if token
         tokens
     end
     

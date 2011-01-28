@@ -41,6 +41,11 @@ module AST
         raise "Exponents between #{self.class} and #{other.class} aren't defined"
       end
     end
+    
+    
+    def simplify
+      constant? ? NodeFactory.build(to_i) : self
+    end
   end
 end
 
