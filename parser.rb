@@ -1,19 +1,6 @@
 # coding: utf-8
 require './ast/node_factory'
-
-class ParseError < RuntimeError
-    attr_accessor :reader, :message
-    
-    def initialize reader, message
-        @reader = reader
-        @message = message
-    end
-    
-    def message
-        "Syntax error at column #{@reader.index}: #{@message}\n" +
-        "#{@reader.string}\n#{(' '*(@reader.index-1))}^"
-    end
-end
+require './char_reader'
 
 class MathParser
     def parse_raw string
@@ -40,35 +27,33 @@ class MathParser
                 token = tokenize(reader, false)
             elsif c == ')'
                 reader.raise 'Encountered ) without matching (' if root
-                tokens << token if !token.empty?
-                return tokens
+                reader.raise 'Trailing operator in quantity' if !token
+                return tokens << token
             elsif (c == '-' || c == '+') && !token
                 token = c
             elsif (c == '-' || c == '+') && (token == '-' || token == '+')
                 reader.raise 'Double-signs are not legal syntax'
-            elsif ops.include? c
+            elsif ops.include?(c) || unipowers.has_key?(c)
+                reader.raise 'Missing number before operator' if !token && tokens.empty?
                 reader.raise 'Double operators are not legal syntax' if !token
-                tokens << token << c.to_sym
-                token = nil
-            elsif unipowers.has_key? c
-                reader.raise 'Double operators are not legal syntax' if !token
-                tokens << token << :'^'
-                token = [unipowers[c]]
-            elsif !token
-                token = c
+                if ops.include?(c)
+                  tokens << token << c.to_sym
+                  token = nil
+                else
+                  tokens << token << :'^'
+                  token = [unipowers[c]]
+                end
             elsif ('a'..'z').include?(c)
-                tokens << token << :*
-                token = c
-            elsif token.is_a? Array
-                tokens << token << :*
+                tokens << token << :* if token
                 token = c
             elsif ('0'..'9').include?(c) || c == '.'
-                token += c
-            #elsif ('0'..'9').include? c
-            #  token += c
-            #elsif c == '.'
-            #  reader.raise 'Decimals may only have one decimal point' if token.include? '.'
-            #  token += c
+                if token && !token.is_a?(String)
+                    tokens << token << :*
+                    token = nil
+                end
+                token = (token || '') + c
+            else
+                reader.raise 'Unknown charactor'
             end
         end
         
@@ -111,36 +96,6 @@ class MathParser
       end
       
       return tokens
-    end
-end
-
-class CharReader
-    attr_accessor :string, :index
-    
-    def initialize string='', index=0
-        @string = string
-        @index = index
-    end
-    
-    def read
-        return nil if eof?
-        @index += 1
-        @string[@index - 1, 1]
-    end
-    
-    def peek
-        eof? ? nil : @string[@index + 1, 1]
-    end
-    
-    def read_to_end
-        yield read until eof?
-    end
-    
-    def eof?; @index >= @string.size; end
-    def remaining; @string.size - @index; end
-    
-    def raise message
-        Kernel.raise ParseError.new(self, message)
     end
 end
 
