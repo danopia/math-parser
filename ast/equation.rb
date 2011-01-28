@@ -30,6 +30,10 @@ module AST
     def inspect
       "#<AST::Equation #{@left.inspect} = #{@right.inspect}>"
     end
+    
+    def simplify
+      Equation.new @left.simplify, @right.simplify
+    end
   end
 end
 

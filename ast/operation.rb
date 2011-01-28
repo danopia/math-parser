@@ -57,6 +57,11 @@ module AST
     def inspect
       "#<AST::Operation::#{op_name} #{@left.inspect} #{@right.inspect}>"
     end
+    
+    def simplify
+      return NodeFactory.build(to_i) if constant?
+      Operation.new @left.simplify, @symbol, @right.simplify
+    end
   end
 end
 

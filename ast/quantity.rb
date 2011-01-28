@@ -23,6 +23,11 @@ module AST
     def inspect
       "#<AST::Quantity #{@child.inspect}>"
     end
+    
+    def simplify # TODO: collapse constants and double quantities
+      return NodeFactory.build(to_i) if constant?
+      Quantity.new @child.simplify
+    end
   end
 end
 

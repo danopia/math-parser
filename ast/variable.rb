@@ -27,6 +27,8 @@ module AST
     def inspect
       "#<AST::Variable #{@letter}>"
     end
+    
+    def simplify; self; end
   end
 end
 
